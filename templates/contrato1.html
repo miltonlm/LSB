@@ -4,13 +4,36 @@
     <meta charset="UTF-8">
     <title>CONTRATO</title>
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" />
+
     <style type="text/css">
 
         body {
             margin: 10px;
-            font-family: Arial;
-            font-size: 12px;
+            font-family: Arial !important;
+            font-size: 13px !important;
             text-align: justify;
+        }
+
+        header h4 {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        header p {
+
+        }
+
+        div.firma {
+            color: black;
+            border-top: 1px solid black;
+            margin-top: 50px;
+        }
+
+        div.firmas {
+            height: 150px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
     </style>
@@ -51,6 +74,8 @@
         {{ servicios_arrendatario }}
     </p>
 </header>
+
+<hr />
 
 <section>
 
@@ -254,12 +279,52 @@
 
 </section>
 
-<section>
-    <p>Parte Arrendadora:</p>
-    <b>{{ parte_arrendadora | safe }}</b><br />
+<section style="padding-top: 20px;">
+<div>
+    <div class="firmas col-xs-6">
+        <p><b>PARTE ARRENDADORA:</b></p>
+        <div class="firma"></div>
+        <b>{{ arrendador | safe }}</b><br />
+    </div>
 
-    <p>Parte Arrendataria:</p>
-    <b>{{ parte_arrendataria | safe }}</b><br />
+    <div class="firmas col-xs-6">
+        <p><b>PARTE ARRENDATARIA:</b></p>
+        <div class="firma"></div>
+        <b>{{ arrendatario | safe }}</b><br />
+    </div>
+</div>
+<div>
+    {% if codeudor1 %}
+
+    <div class="firmas col-xs-6">
+        <p><b>CODEUDOR 1:</b></p>
+        <div class="firma"></div>
+        <b>{{ codeudor1 | safe }}</b><br />
+    </div>
+
+    {% endif %}
+
+    {% if codeudor2 %}
+
+    <div class="firmas col-xs-6">
+        <p><b>CODEUDOR 2:</b></p>
+        <div class="firma"></div>
+        <b>{{ codeudor2 | safe }}</b><br />
+    </div>
+
+    {% endif %}
+</div>
+<div>
+    {% if codeudor3 %}
+
+    <div class="firmas col-xs-12">
+        <p><b>CODEUDOR 3:</b></p>
+        <div class="firma"></div>
+        <b>{{ codeudor3 | safe }}</b><br />
+    </div>
+
+    {% endif %}
+</div>
 </section>
 
 </body>

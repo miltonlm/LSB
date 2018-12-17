@@ -27,5 +27,5 @@ urlpatterns = [
     url('qr/', views.qr),
     url('ct/', views.ct),
     url('si/', views.si),
-    url('ct/', views.ct)
+    url('ctpdf/', views.ctpdf)
 ]

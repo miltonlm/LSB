@@ -181,9 +181,12 @@ def ctpdf(request):
     cp = Personas.objects.filter(identificacion=contrato.cliente_propietario).first()
     ca = Personas.objects.filter(identificacion=contrato.cliente_arrendatario).first()
     ar = Personas.objects.filter(id=cp.asesor).first()
+    cd1 = Personas.objects.filter(identificacion=contrato.codeudor1).first()
+    cd2 = Personas.objects.filter(identificacion=contrato.codeudor2).first()
+    cd3 = Personas.objects.filter(identificacion=contrato.codeudor3).first()
 
-    fecha_inicio = datetime.strptime(contrato.fecha_inicio, "%Y-%m-%d")
-    fecha_vigencia = datetime.strptime(contrato.fecha_vigencia, "%Y-%m-%d")
+    fecha_inicio = contrato.fecha_inicio
+    fecha_vigencia = contrato.fecha_vigencia
 
     locale.setlocale(locale.LC_ALL, '')
 
@@ -209,29 +212,57 @@ def ctpdf(request):
     sa = sa.replace("[", "")
     sa = sa.replace("]", "")
 
+    codeudor1 = None
+    codeudor2 = None
+    codeudor3 = None
+
+    if cd1:
+        codeudor1 = "{}, {} {}".format(cd1.nombre, cd1.tipo_identificacion, cd1.identificacion)
+    if cd2:
+        codeudor2 = "{}, {} {}".format(cd2.nombre, cd2.tipo_identificacion, cd2.identificacion)
+    if cd3:
+        codeudor3 = "{}, {} {}".format(cd3.nombre, cd3.tipo_identificacion, cd3.identificacion)
+
     context = {
         'arrendador': ar.nombre + ", " + ar.tipo_identificacion + " " + ar.identificacion,
         'arrendatario': ca.nombre + ", " + ca.tipo_identificacion + " " + ca.identificacion,
         'direccion_inmueble': im.direccion + ", " + im.ciudad + ", " + im.departamento + ", " + im.pais,
-        'precio_canon': '{} {}'.format(locale.currency(contrato.precio_canon, grouping=True),
+        'precio_canon': '{} {}'.format(locale.currency(contrato.precio_canon, grouping=True).replace('+', ' '),
                                        numero_a_moneda(contrato.precio_canon).upper()),
-        'termino_contrato': round((fecha_vigencia - fecha_inicio).days / 30, 0),
+        'termino_contrato': int(round((fecha_vigencia - fecha_inicio).days / 30, 0)),
         'fecha_inicio': fecha_inicio,
         'fecha_vencimiento': fecha_vigencia,
         'servicios_arrendatario': sa,
         'parte_arrendadora': parte_arrendadora,
-        'parte_arrendataria': parte_arrendataria
+        'parte_arrendataria': parte_arrendataria,
+        'codeudor1': codeudor1,
+        'codeudor2': codeudor2,
+        'codeudor3': codeudor3
     }
 
     rp = render(request, "contrato1.html", context)
 
-    f = open("contrato123.html", "wb")
+    f = open("contrato{}.html".format(im.id), "wb")
 
     f.write(rp.content)
     f.flush()
     f.close()
 
-    pdfkit.from_file("contrato123.html", "contrato.pdf")
+    tipo_vivienda = 'VIVIENDA URBANA'
+
+    if im.tipo_inmueble == 'LOCAL':
+        tipo_vivienda = 'LOCAL COMERCIAL'
+
+    idIm = "{}".format(im.id)
+    idIm = idIm.zfill(4)
+
+    pdfkit.from_file("contrato{}.html".format(im.id), "contrato.pdf", {
+        'title': 'CONTRATO DE ARRENDAMIENTO DE {} N° {}-2'.format(tipo_vivienda, idIm),
+        '--header-html': 'http://lopezserranobienes.com:81/header.php',
+        '--header-spacing': '25',
+        '--footer-html': 'http://lopezserranobienes.com:81/footer.php',
+        '--footer-spacing': '5'
+    })
     rp = FileResponse(open("contrato.pdf", "rb"), as_attachment=True, filename="contrato.pdf",
                       content_type="application/pdf")
 

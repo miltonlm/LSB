@@ -91,7 +91,7 @@ $(document).ready(function () {
                     data = JSON.parse(data);
 
                     if (data.length == 0) {
-                        $("#id_nombre_propietario").val("");
+                        $("#id_nombre_cliente").val("");
                         swal("Error", "El cliente arrendatario indicado no existe.", "error");
                         return;
                     }

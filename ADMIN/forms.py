@@ -1,6 +1,5 @@
 from django import forms
 from django.db.models import Q
-
 from .models import Personas, Inmuebles, Contratos
 
 TIPOS_PERSONA = [
@@ -210,7 +209,9 @@ class FC(forms.ModelForm):
     fecha_contrato = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
     fecha_inicio = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
     fecha_vigencia = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
-    precio_canon = forms.DecimalField(max_digits=10, decimal_places=2)
+    precio_canon = forms.DecimalField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}),
+                                     max_digits=10,
+                                     decimal_places=2)
     servicios_arrendador = forms.MultipleChoiceField(choices=SERVICIOS,
                                                      widget=forms.CheckboxSelectMultiple(choices=SERVICIOS))
     servicios_arrendatario = forms.MultipleChoiceField(choices=SERVICIOS,
