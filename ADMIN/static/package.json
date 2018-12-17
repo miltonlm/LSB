@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "angular": "^1.7.2",
+    "jquery": "^3.3.1"
+  }
+}
