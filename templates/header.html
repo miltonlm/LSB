@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://bootswatch.com/4/litera/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/3.1.6/footable.standalone.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@7.26.2/dist/sweetalert2.css">
+    <link rel="stylesheet" href="{% static "node_modules/sweetalert2/dist/sweetalert2.css" %}"/>
     <link rel="stylesheet" href="{% static "" %}css/footer.css">
     <link rel="stylesheet" href="{% static "" %}css/custom.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -29,7 +29,7 @@
     <script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/1.0.7/js/dataTables.responsive.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/3.1.6/footable.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.26.2/dist/sweetalert2.all.min.js"></script>
+    <script src="{% static "node_modules/sweetalert2/dist/sweetalert2.min.js" %}"></script>
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="{% static "" %}js/sly.min.js"></script>
     <script src="{% static "" %}js/custom.js"></script>
@@ -56,17 +56,17 @@
                     <a class="nav-link" href="#">Inicio<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/p/" id="navbarDropdownMenuLink">
+                    <a class="nav-link" href="/crud/Personas" id="navbarDropdownMenuLink">
                         Personas
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/in/" id="navbarDropdownMenuLink">
+                    <a class="nav-link" href="/crud/Inmuebles" id="navbarDropdownMenuLink">
                         Inmuebles
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ct/" id="navbarDropdownMenuLink">
+                    <a class="nav-link" href="/crud/Contratos" id="navbarDropdownMenuLink">
                         Contratos
                     </a>
                 </li>

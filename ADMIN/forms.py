@@ -1,8 +1,10 @@
 from django import forms
 from django.db.models import Q
 from .models import Personas, Inmuebles, Contratos
+from datetime import date
 
 TIPOS_PERSONA = [
+    ('', 'SELECCIONAR'),
     ('PROPIETARIO', 'PROPIETARIO'),
     ('ARRENDATARIO', 'ARRENDATARIO'),
     ('CODEUDOR', 'CODEUDOR'),
@@ -11,6 +13,7 @@ TIPOS_PERSONA = [
 ]
 
 TIPOS_IDENTIFICACION = [
+    ('', 'SELECCIONAR'),
     ('CC', 'CEDULA'),
     ('PA', 'PASAPORTE'),
     ('CE', 'CEDULA DE EXTRANJERIA'),
@@ -19,6 +22,7 @@ TIPOS_IDENTIFICACION = [
 ]
 
 TIPOS_INMUEBLES = [
+    ('', 'SELECCIONAR'),
     ('CASA', 'CASA'),
     ('APARTAMENTO', 'APARTAMENTO'),
     ('APARTAESTUDIO', 'APARTAESTUDIO'),
@@ -28,34 +32,41 @@ TIPOS_INMUEBLES = [
 ]
 
 TIPOS_OFERTA = [
+    ('', 'SELECCIONAR'),
     ('ALQUILER', 'ALQUILER'),
     ('VENTA', 'VENTA')
 ]
 
 ESTADOS_INMUEBLES = [
+    ('', 'SELECCIONAR'),
     ('DISPONIBLE', 'DISPONIBLE'),
     ('OCUPADO', 'OCUPADO'),
     ('PROXIMAMENTE DISPONIBLE', 'PROXIMAMENTE DISPONIBLE')
 ]
 
 PAISES = [
+    ('', 'SELECCIONAR'),
     ('COLOMBIA', "COLOMBIA")
 ]
 
 DEPARTAMENTOS = [
+    ('', 'SELECCIONAR'),
     ('VALLE DEL CAUCA', 'VALLE DEL CAUCA')
 ]
 
 CIUDADES = [
+    ('', 'SELECCIONAR'),
     ('CALI', 'CALI'),
     ('PALMIRA', 'PALMIRA'),
     ('JAMUNDI', 'JAMUNDI'),
     ('ROLDANILLO', 'ROLDANILLO'),
     ('CARTAGO', 'CARTAGO'),
-    ('BUENAVENTURA', 'BUENAVENTURA')
+    ('BUENAVENTURA', 'BUENAVENTURA'),
+    ('HONDA', 'HONDA'),
 ]
 
 ZONAS = [
+    ('', 'SELECCIONAR'),
     ('NORTE', 'NORTE'),
     ('SUR', 'SUR'),
     ('CENTRO', 'CENTRO'),
@@ -64,6 +75,7 @@ ZONAS = [
 ]
 
 SERVICIOS = [
+    ('', 'SELECCIONAR'),
     ('AGUA', 'AGUA'),
     ('ENERGIA', 'ENERGIA'),
     ('GAS', 'GAS'),
@@ -75,33 +87,22 @@ SERVICIOS = [
 ]
 
 
-class FP(forms.ModelForm):
+class FormPersonas(forms.ModelForm):
     class Meta:
         model = Personas
-        fields = ['tipo_persona',
-                  'asesor',
-                  'nombre',
-                  'tipo_identificacion',
-                  'identificacion',
-                  'lugar_expedicion_identificacion',
-                  'pais',
-                  'departamento',
-                  'ciudad',
-                  'direccion',
-                  'telefono_movil',
-                  'telefono_fijo',
-                  'correo',
-                  'valoracion',
-                  'fecha_creacion',
-                  'password']
+        fields = '__all__'
 
-    tipo_persona = forms.ChoiceField(required=False, widget=forms.Select(attrs={'class': 'form-control'}),
-                                     choices=TIPOS_PERSONA)
-    asesor = forms.ChoiceField(required=False,
-                               widget=forms.Select(attrs={'class': 'form-control'}),
-                               choices=((x.pk, x.nombre) for x in
-                                        Personas.objects.filter(
-                                            Q(tipo_persona='REPRESENTANTE') | Q(tipo_persona='ASESOR'))))
+    tipo_persona = forms.ChoiceField(choices=TIPOS_PERSONA)
+    asesor = forms.ModelChoiceField(
+        queryset=Personas.objects.filter(
+            Q(tipo_persona='REPRESENTANTE') | Q(tipo_persona='ASESOR')
+        ),
+        required=False
+    )
+    tipo_identificacion = forms.ChoiceField(choices=TIPOS_IDENTIFICACION)
+    lugar_expedicion_identificacion = forms.ChoiceField(choices=CIUDADES)
+    fecha_creacion = forms.DateTimeField(widget=forms.HiddenInput, required=False)
+    '''
     nombre = forms.CharField(max_length=255, label='Nombre', widget=forms.TextInput(attrs={'class': 'form-control'}))
     tipo_identificacion = forms.ChoiceField(required=False, widget=forms.Select(attrs={'class': 'form-control'}),
                                             choices=TIPOS_IDENTIFICACION)
@@ -122,35 +123,32 @@ class FP(forms.ModelForm):
     fecha_creacion = forms.DateField(required=False, widget=forms.DateInput(attrs={'disabled': 'disabled'}))
     password = forms.CharField(max_length=255, required=False,
                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    '''
 
 
-class FI(forms.ModelForm):
+class FormInmuebles(forms.ModelForm):
     class Meta:
         model = Inmuebles
-        fields = ['cliente_propietario',
-                  'pais',
-                  'departamento',
-                  'ciudad',
-                  'zona',
-                  'barrio',
-                  'direccion',
-                  'tipo_inmueble',
-                  'numero_habitaciones',
-                  'numero_banos',
-                  'numero_parqueaderos',
-                  'descripcion',
-                  'latitud',
-                  'longitud',
-                  'estado',
-                  'costo_canon',
-                  'precio_canon',
-                  'tipo_oferta']
+        fields = '__all__'
 
-    representante = forms.ChoiceField(required=False,
+    representante = forms.ModelChoiceField(
+        queryset=Personas.objects.filter(
+            Q(tipo_persona='REPRESENTANTE') | Q(tipo_persona='ASESOR')
+        ),
+        required=False,
+    )
+    zona = forms.ChoiceField(choices=ZONAS)
+    tipo_inmueble = forms.ChoiceField(choices=TIPOS_INMUEBLES)
+    estado = forms.ChoiceField(choices=ESTADOS_INMUEBLES)
+    tipo_oferta = forms.ChoiceField(choices=TIPOS_OFERTA)
+
+    '''representante = forms.ChoiceField(required=False,
                                       widget=forms.Select(attrs={'class': 'form-control'}),
-                                      choices=((x.pk, x.nombre) for x in
-                                               Personas.objects.filter(
-                                                   Q(tipo_persona='REPRESENTANTE'))))
+                                      choices=(
+                                          #(x.pk, x.nombre) for x in
+                                          #     Personas.objects.filter(
+                                          #         Q(tipo_persona='REPRESENTANTE')))
+                                      ))
     cliente_propietario = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': "form-control"}))
     pais = forms.ChoiceField(required=False, widget=forms.Select(attrs={'class': 'form-control'}), choices=PAISES)
     departamento = forms.CharField(required=False,
@@ -178,29 +176,46 @@ class FI(forms.ModelForm):
                                       decimal_places=2)
     tipo_oferta = forms.CharField(required=True, widget=forms.Select(attrs={'class': 'form-control'},
                                                                      choices=TIPOS_OFERTA))
+    '''
 
 
-class FC(forms.ModelForm):
+class FormContratos(forms.ModelForm):
     class Meta:
         model = Contratos
-        fields = ['representante',
-                  'cliente_propietario',
-                  'inmueble',
-                  'cliente_arrendatario',
-                  'fecha_contrato',
-                  'fecha_inicio',
-                  'fecha_vigencia',
-                  'precio_canon',
-                  'servicios_arrendatario',
-                  'servicios_arrendador',
-                  'codeudor1',
-                  'codeudor2',
-                  'codeudor3']
+        fields = '__all__'
 
-    id = forms.HiddenInput()
-    representante = forms.ChoiceField(required=False, widget=forms.Select(attrs={'class': 'form-control'}),
-                                      choices=((x.identificacion, x.nombre) for x in
-                                               Personas.objects.filter(tipo_persona="REPRESENTANTE")))
+    representante = forms.ModelChoiceField(
+        queryset=Personas.objects.filter(
+            Q(tipo_persona='REPRESENTANTE') | Q(tipo_persona='ASESOR')
+        ),
+        required=False,
+    )
+    servicios_arrendador = forms.MultipleChoiceField(
+        choices=SERVICIOS,
+        widget=forms.CheckboxSelectMultiple(choices=SERVICIOS)
+    )
+    servicios_arrendatario = forms.MultipleChoiceField(
+        choices=SERVICIOS,
+        widget=forms.CheckboxSelectMultiple(choices=SERVICIOS)
+    )
+    fecha_contrato = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        initial=date.today
+    )
+    fecha_inicio = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        initial=date.today
+    )
+    fecha_vigencia = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        initial=date.today
+    )
+
+    '''representante = forms.ChoiceField(required=False, widget=forms.Select(attrs={'class': 'form-control'}),
+                                      choices=(
+                                      #    (x.identificacion, x.nombre) for x in
+                                      #         Personas.objects.filter(tipo_persona="REPRESENTANTE")
+                                      ))
     cliente_propietario = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}),
                                           label="Cliente Propietario")
     inmueble = forms.CharField(required=False, widget=forms.Select(attrs={'class': 'form-control'}), label="Inmueble")
@@ -219,3 +234,4 @@ class FC(forms.ModelForm):
     codeudor1 = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     codeudor2 = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     codeudor3 = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    '''

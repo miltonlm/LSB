@@ -9,3 +9,8 @@ angular@^1.7.2:
 jquery@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
+
+sweetalert2@^8.11.1:
+  version "8.11.1"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-8.11.1.tgz#deb4a729618ae536db6210028fb5d133ccb5a17b"
+  integrity sha512-yjN01bRiIagiL47zhiR6IHh2F0KcMdw8azeJzeFaOpIR28LqHcVZnH7xLsxD32xmCwoDk/BuuAwCosmQHhy+Ag==

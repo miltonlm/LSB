@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "angular": "^1.7.2",
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "sweetalert2": "^8.11.1"
   }
 }

@@ -1,5 +1,9 @@
 {% include "header.html" %}
 {% load static %}
+{% load crud_tags %}
+
+<input type="hidden" id="tabla" value="{{ nombre_programa }}" />
+
 <div class="container">
     <div class="table-wrapper">
         <div class="table-title">
@@ -8,12 +12,14 @@
                     <h2>Administrar {{ nombre_programa }}</h2>
                 </div>
                 <div class="col-sm-6">
-                    <a href="#addEmployeeModal"
+                    <a href="#add_modal"
                        class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i>
                         <span style='text-transform: uppercase;'>CREAR {{ nombre_programa }}</span>
                     </a>
-                    <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i>
-                        <span>Eliminar</span></a>
+                    <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal">
+                        <i class="material-icons">&#xE15C;</i>
+                        <span>ELIMINAR</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -42,7 +48,7 @@
                         </span>
                     </td>
                     {% for field, value in instance.fields.items %}
-                        <td>{{ value }}</td>
+                        <td>{% model_description field=field value=value %}</td>
                     {% endfor %}
                     <td>
                         <a href="/ctpdf/?id={{ instance.pk }}"
@@ -52,16 +58,18 @@
                                data-toggle="tooltip"
                                title="Edit"><i class="fa fa-file-pdf-o"></i></i>
                         </a>
-                        <a href="#editEmployeeModal"
+                        <a href="#edit_modal"
+                           onclick="editar({{ instance.pk }})"
                            class="edit" data-toggle="modal">
                             <i class="material-icons"
                                data-toggle="tooltip"
                                title="Edit">&#xE254;</i>
                         </a>
-                        <a href="#deleteEmployeeModal" class="delete" data-toggle="modal">
+                        <a href="javascript:;" onclick="eliminar({{ instance.pk }})">
                             <i class="material-icons"
                                data-toggle="tooltip"
-                               title="Delete">&#xE872;</i></a>
+                               title="Delete">&#xE872;</i>
+                        </a>
                     </td>
                 </tr>
             {% endfor %}
@@ -132,17 +140,17 @@
 </div>
 
 <!-- Edit Modal HTML -->
-<div id="addEmployeeModal" class="modal fade">
+<div id="add_modal" class="modal fade">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="" onsubmit="submitForm(this); return false">
+            <form action="/crud/{{ nombre_programa }}" onsubmit="submitForm(event, this); return false">
                 {% csrf_token %}
                 <div class="modal-header">
                     <h4 class="modal-title">Agregar {{ nombre_programa }}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-striped table-condensed">
+                    <table class="table table-striped table-condensed form-bootstrap">
                         {{ form.as_table }}
                     </table>
                 </div>
@@ -156,17 +164,20 @@
 </div>
 
 <!-- Edit Modal HTML -->
-<div id="editEmployeeModal" class="modal fade">
+<div id="edit_modal" class="modal fade">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="" method="GET" target="_blank">
+            <form action="/crud/{{ nombre_programa }}" onsubmit="submitForm(event, this)">
                 {% csrf_token %}
+
+                <input type="hidden" class="edid_id" />
+
                 <div class="modal-header">
                     <h4 class="modal-title">Editar {{ nombre_programa }}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-striped table-condensed">
+                    <table class="table table-striped table-condensed form-bootstrap">
                         {{ form.as_table }}
                     </table>
                 </div>

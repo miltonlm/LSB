@@ -110,7 +110,11 @@ def numero_a_moneda(numero):
         moneda = MONEDA_PLURAL
     letras = numero_a_letras(numero_entero)
     letras = letras.replace('uno', 'un')
-    letras_decimal = 'con %s %s' % (numero_a_letras(parte_decimal).replace('uno', 'un'), centimos)
+    letras_decimal = ''
+
+    if parte_decimal > 0:
+        letras_decimal = 'con %s %s' % (numero_a_letras(parte_decimal).replace('uno', 'un'), centimos)
+
     letras = '%s %s %s' % (letras, moneda, letras_decimal)
     return letras
 
